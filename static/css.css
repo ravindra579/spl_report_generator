@@ -1,0 +1,62 @@
+a:link,a:visited,a:active,a:hover{
+    color: blue;
+}
+@page{
+    size:A4;
+    margin: 1cm,1cm;
+}
+.a{
+    text-align: center;
+    font-size: 30px;
+    text-shadow: 1px 1px;
+    color:blue;
+    border-bottom: 4px solid black;
+}
+.b{
+    
+    text-align: left;
+    color:blue;
+}
+.c{
+    
+    text-align: left;
+    position:relative;
+    top: 1%;
+    left: 2%;
+    font-size: large;
+    width: 10%;
+    height: 600px;
+}
+.d{
+    text-align: center;
+    font-size: large;
+    position:relative;
+    top: 2%;
+}
+.e{
+    position:relative;
+    font-size: large;
+    left: 1%;
+    right: 1%;
+}
+.f{
+    text-align: right;
+    font-size: large;
+    position:relative;
+    top: 1%;
+    right: 2%;
+}
+.aaa{
+    float: left;
+    font-size: large;
+    padding-left: 5%;
+}
+.aa{
+    height:100px;
+}
+.aaaa{
+    height:100px;
+}
+.aaaa:hover{
+    transform: scale(1.2);
+}

@@ -1,0 +1,516 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'tooplate-style_.css' %}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.9.0/js/anychart-core.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.9.0/js/anychart-venn.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.9.0/themes/pastel.min.js"></script>
+		<script>
+			var confi={
+			  type: 'bar',
+			  data:  {
+				labels: ['your marks','avg marks','highest marks'],
+				datasets: [{
+					label: ['your marks','avg marks','highest marks'],
+					backgroundColor: ['#ff0000', '#0000ff', '#ff0080'],
+					borderColor: "rgb(54, 162, 235)",
+					borderWidth: 1,
+					data: [{{apti.total}},{{avg.total}},{{hig.total}},0],
+				  }]
+			  },
+			  options:{
+				responsive: true,
+				  legend:{
+					display:false
+				  }
+				  }
+			  
+			};
+		  var config={
+			type: 'doughnut',
+			data:  {
+			  labels: ["verbal ability","logical ability","quantitative ability"],
+			  datasets: [{
+				  label: ["verbal ability","logical ability","quantitative ability"],
+				  backgroundColor: ['#ff0000', '#0000ff', '#ff0080'],
+				  borderColor: "rgb(54, 162, 235)",
+				  borderWidth: 1,
+				  data: [{{x}},{{z}},{{y}}],
+				}]
+			},options:{
+			  responsive: true,
+				legend:{
+				  display:true,
+				  position:"right"
+				}
+				}
+		  };
+			anychart.onDocumentReady(function () {
+			  var data = [
+				{
+				  x: "A",
+				  value: {{mod}},
+				  name: "user"
+				},
+				{
+				  x: "C",
+				  value: {{apti.total}},
+				  name: "mode "
+				},
+				{
+				  x: ["A", "C"],
+				  value:{{n}},
+				  name: "intersection "
+				}
+			  ];
+			  var chart = anychart.venn(data);
+			  chart.container("con");
+			  chart
+				.title()
+				.enabled(true)
+				.fontSize(24)
+				.padding({ bottom: 25 })
+				.text(" ");
+			  chart.stroke("1 #fff");
+			  chart
+				.labels()
+				.fontSize(14)
+				.fontColor("#5e6469")
+				.hAlign("center")
+				.vAlign("center")
+				.fontWeight("500")
+				.format("{%Name}");
+			  chart
+				.intersections()
+				.labels()
+				.fontStyle("italic")
+				.fontColor("gray")
+				.format("{%Name}");
+			  chart.legend(true);
+			  chart.draw();
+			  chart.title("venn diagram");
+			  chart.labels().format("{%Name}");
+			});
+		  function dat(){
+		  var d={{apti.timespent}};
+		  if(d >=20 && d<=40){
+		  var da=[0,{{apti.total}},0,0,0,0,0];
+		  } else if(d>=40 && d<=60){
+		  var da=[0,0,{{apti.total}},0,0,0,0];
+		  } else if(d>=60 && d<=80){
+		  var da=[0,0,0,{{apti.total}},0,0,0];
+		  } else if(d>=80 && d <=100){
+		  var da=[0,0,0,0,{{apti.total}},0,0];
+		  } else if(d>=100){
+		  var da=[0,0,0,0,0,{{apti.total}},0];
+		  } else{
+		  var da=[0,40,0,0,0,0,0];
+		  }
+		  return da;
+		  }
+			var line_={
+			  type: 'line',
+			  data:  {
+				labels: ["0","20","40","60","80","100","120"],
+				datasets: [{
+				label:"",
+				data:[0,0,0,0,0,0,0],
+				backgroundColor: 'white',
+				type:'bubble'
+			  },
+				{
+				  label:"your marks",
+				  data:dat(),
+				  backgroundColor: 'black',
+				  borderWidth:'20px',
+				  type:'bubble'
+				},
+				{
+				  type:'line',
+					label: "Work hard ahead" ,
+					backgroundColor: '#ff0080',
+					lineTension:0,
+					data: [10,10,10,10,20,20,20]
+				  },
+				  {type:'line',
+					label: "Need attension" ,
+					backgroundColor: '#ff0000',
+					lineTension:0,
+					data: [20,20,20,20,30,30,30]
+				  },
+				  {type:'line',
+					label: "satisfactory" ,
+					backgroundColor: 'gray',
+					data: [30,30,30,30,40,40,40],
+					lineTension:0
+				  },
+				  {
+					label: "Good" ,
+					backgroundColor: '#ff0000',
+					data: [40,40,40,40,50,50,50],
+					lineTension:0
+				  },
+				  {
+					label: "Brilliant" ,
+					backgroundColor: 'gray',
+					data: [65,65,65,65,65,65,65],
+					lineTension:0
+				  }]
+			  },
+			  options:{
+				responsive:true,
+				legend:{
+				  display:true,
+				  position:"right"
+				},
+				hover:{
+				  mode:'label'
+				},
+				scales:{
+					  xAxes:[{
+						display:true,
+						scaleLabel:{
+						  display:true,
+						  labelString:'Time taken to write the exam '
+						}
+					  }],
+					  yAxes:[{
+						display:true,
+						ticks:{
+						  beginAtZero:true,
+						  max:65
+						}
+					  }]
+				}
+		  
+			  }
+			};
+			 window.onload = function() {
+			  var ctx_line = document.getElementById('line').getContext('2d');
+			  window.myPie = new Chart(ctx_line, line_);
+			   var ctx = document.getElementById('pie').getContext('2d');
+			   window.myPie = new Chart(ctx, config);
+			   var ctt = document.getElementById('piy').getContext('2d');
+			   window.myPie = new Chart(ctt, confi);
+			 };
+			 window.onclick=function(){
+			   var x=document.getElementById(exp)
+			 }
+		  </script>
+		  <script>
+		var renderPage = true;
+
+	if(navigator.userAgent.indexOf('MSIE')!==-1
+		|| navigator.appVersion.indexOf('Trident/') > 0){
+   		/* Microsoft Internet Explorer detected in. */
+   		alert("Please view this in a modern browser such as Chrome or Microsoft Edge.");
+   		renderPage = false;
+	}
+	</script>
+</head>
+
+<body>
+	<!-- Loader -->
+	<div id="loader-wrapper">
+		<div id="loader"></div>
+		<div class="loader-section section-left"></div>
+		<div class="loader-section section-right"></div>
+	</div>
+	
+	<!-- Page Content -->
+	<div class="container-fluid tm-main">
+		<div class="row tm-main-row">
+			<div id="tmSideBar" class="col-xl-3 col-lg-4 col-md-12 col-sm-12 sidebar">
+				<button id="tmMainNavToggle" class="menu-icon"></button>
+				<div class="inner">
+					<nav id="tmMainNav" class="tm-main-nav">
+						<ul>
+							<li>
+								<a href="#intro" id="tmNavLink1" class="scrolly active" data-page="#tm-section-1">
+									<span>Your skills in different sections</span>
+								</a>
+							</li>
+							<li>
+								<a href="#products" id="tmNavLink2" class="scrolly"  data-page="#tm-section-2">
+									<span>Compare your score</span>
+								</a>
+							</li>							
+							<li>
+								<a href="#company" id="tmNavLink3" class="scrolly"  data-page="#tm-section-3">
+									<span>your score vs time</span>
+								</a>
+							</li>
+							<li>
+								<a href="#contact" id="tmNavLink4" class="scrolly"  data-page="#tm-section-4">
+									<span>Which questions all you have done</span>
+								</a>
+							</li>
+							<li>
+								<a href="#contact1" id="tmNavLink5" class="scrolly" 
+data-page="#tm-section-5">
+	<span>Have a look at scores of all users</span>
+	</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+
+			<div class="col-xl-9 col-lg-8 col-md-12 col-sm-12 tm-content">
+					<section id="tm-section-1" class="tm-section">
+						<div class="ml-auto">
+								<div style="width:500px;float:center">
+								<canvas id="pie"></canvas>
+								</div>
+								<br>
+								<br>
+								<h5>In this section based on the above doughnut chart you will get to know in which section you are strong at, in which section you have to improve</h5>
+								<a href="#" class="btn tm-btn tm-font-big" data-nav-link="#tmNavLink2" style="color: black;">click here to Continue...</a>
+								<a href="home" class="btn tm-btn tm-font-big" style="color: black;">click here to main page</a> 
+					    </div>
+							</section>
+
+					<!-- section 2 -->
+					<section id="tm-section-2" class="tm-section">
+									<div style="width: 600px;float :center">
+										<canvas id="piy"></canvas>
+									  </div>       	
+									  <br>
+									  <h5>In this section you can compare your marks with average marks and highest marks</h5>
+								<a href="home" class="btn tm-btn tm-font-big" style="color: black;">click here to main page</a>          	
+					</section>
+
+					<!-- section 3 -->
+					<section id="tm-section-3" class="tm-section">						
+						<div style="width:700px;padding-top:30px;float:left">
+							<canvas id="line"></canvas>
+							<br>
+							<br>
+							<h5>The above graph is time Vs marks graph the black spot tells us how much time you have spent to write the exam and how many marks you got,analyse and prepare well and become strong for future tests</h5>
+							<br>
+							<h5>Don't discourage yourself this an assumption only</h5>
+								<a href="home" class="btn tm-btn tm-font-big" style="color: black;">click here to main page</a> 
+						</div>						               
+					</section>
+
+					<!-- section 4 -->
+					<section id="tm-section-4" class="tm-section">
+						<div id="con" style="width: 700px;;height:400px;float:center"></div>
+						<br>
+						<br>
+						<h5>Here "user" means no.of questions you have done correct ,"mode" means how many questions most of the users done correct,"intersection" means how many questions you and most users have done correct ,based on this graph we can understood whether we had done hard questions that means most users done wrong or we had left simple or basic questions  </h5>
+								<a href="home" class="btn tm-btn tm-font-big" style="color: black;">click here to main page</a> 
+					</section>	
+					<section id="tm-section-5" class="tm-section">
+						<div class="row">
+							<div class="col">
+									<div class="table-responsive-sm">
+									<table class="table table-hover table-sm table-striped 
+			table-condensed table-bordered">
+											<thead>
+													<tr>
+													<th scope="col" class="text-center py-2">Marks</th>
+													<th scope="col" class="text-center py-2">Timespent</th>
+													</tr>
+											</thead>
+											<tbody>
+												{% for us in users %}
+									<tr>
+											<td class="py-2">{{us.total}}</td>
+											<td class="py-2">{{us.timespent}}</td>
+									</tr>
+									{% endfor %}
+											</tbody>
+									</table>
+									</div>
+							</div>
+					</div> 
+			 </div>
+			</section>							
+
+		<div id="preload-01"></div>
+		<div id="preload-02"></div>
+		<div id="preload-03"></div>
+		<div id="preload-04"></div>
+
+		<script type="text/javascript" src="{% static 'jquery-3.2.1.min.js' %}"></script>
+		<script type="text/javascript" src="{% static 'jquery.backstretch.min.js' %}"></script> <!-- Slick Carousel -->
+
+		<script>
+
+		var sidebarVisible = false;
+		var currentPageID = "#tm-section-1";
+
+		// Setup Carousel
+		function setupCarousel() {
+
+			// If current page isn't Carousel page, don't do anything.
+			if($('#tm-section-2').css('display') == "none") {
+			}
+			else {	// If current page is Carousel page, set up the Carousel.
+
+				var slider = $('.tm-img-slider');
+				var windowWidth = $(window).width();
+
+				if (slider.hasClass('slick-initialized')) {
+					slider.slick('destroy');
+				}
+
+				if(windowWidth < 640) {
+					slider.slick({
+	              		dots: true,
+	              		infinite: false,
+	              		slidesToShow: 1,
+	              		slidesToScroll: 1
+	              	});
+				}
+				else if(windowWidth < 992) {
+					slider.slick({
+	              		dots: true,
+	              		infinite: false,
+	              		slidesToShow: 2,
+	              		slidesToScroll: 1
+	              	});
+				}
+				else {
+					// Slick carousel
+	              	slider.slick({
+	              		dots: true,
+	              		infinite: false,
+	              		slidesToShow: 3,
+	              		slidesToScroll: 2
+	              	});
+				}
+
+				// Init Magnific Popup
+				$('.tm-img-slider').magnificPopup({
+				  delegate: 'a', // child items selector, by clicking on it popup will open
+				  type: 'image',
+				  gallery: {enabled:true}
+				  // other options
+				});
+      		}
+  		}
+
+  		// Setup Nav
+  		function setupNav() {
+  			// Add Event Listener to each Nav item
+	     	$(".tm-main-nav a").click(function(e){
+	     		e.preventDefault();
+		    	
+		    	var currentNavItem = $(this);
+		    	changePage(currentNavItem);
+		    	
+		    	setupCarousel();
+		    	setupFooter();
+
+		    	// Hide the nav on mobile
+		    	$("#tmSideBar").removeClass("show");
+		    });	    
+  		}
+
+  		function changePage(currentNavItem) {
+  			// Update Nav items
+  			$(".tm-main-nav a").removeClass("active");
+     		currentNavItem.addClass("active");
+
+	    	$(currentPageID).hide();
+
+	    	// Show current page
+	    	currentPageID = currentNavItem.data("page");
+	    	$(currentPageID).fadeIn(1000);
+
+	    	// Change background image
+	    	var bgImg = currentNavItem.data("bgImg");
+	    	$.backstretch("img/" + bgImg);		    	
+  		}
+
+  		// Setup Nav Toggle Button
+  		function setupNavToggle() {
+
+			$("#tmMainNavToggle").on("click", function(){
+				$(".sidebar").toggleClass("show");
+			});
+  		}
+
+  		// If there is enough room, stick the footer at the bottom of page content.
+  		// If not, place it after the page content
+  		function setupFooter() {
+  			
+  			var padding = 100;
+  			var footerPadding = 40;
+  			var mainContent = $("section"+currentPageID);
+  			var mainContentHeight = mainContent.outerHeight(true);
+  			var footer = $(".footer-link");
+  			var footerHeight = footer.outerHeight(true);
+  			var totalPageHeight = mainContentHeight + footerHeight + footerPadding + padding;
+  			var windowHeight = $(window).height();		
+
+  			if(totalPageHeight > windowHeight){
+  				$(".tm-content").css("margin-bottom", footerHeight + footerPadding + "px");
+  				footer.css("bottom", footerHeight + "px");  			
+  			}
+  			else {
+  				$(".tm-content").css("margin-bottom", "0");
+  				footer.css("bottom", "20px");  				
+  			}  			
+  		}
+
+  		// Everything is loaded including images.
+      	$(window).on("load", function(){
+
+      		// Render the page on modern browser only.
+      		if(renderPage) {
+				// Remove loader
+		      	$('body').addClass('loaded');
+
+		      	// Page transition
+		      	var allPages = $(".tm-section");
+
+		      	// Handle click of "Continue", which changes to next page
+		      	// The link contains data-nav-link attribute, which holds the nav item ID
+		      	// Nav item ID is then used to access and trigger click on the corresponding nav item
+		      	var linkToAnotherPage = $("a.tm-btn[data-nav-link]");
+			    
+			    if(linkToAnotherPage != null) {
+			    	
+			    	linkToAnotherPage.on("click", function(){
+			    		var navItemToHighlight = linkToAnotherPage.data("navLink");
+			    		$("a" + navItemToHighlight).click();
+			    	});
+			    }
+		      	
+		      	// Hide all pages
+		      	allPages.hide();
+
+		      	$("#tm-section-1").fadeIn();
+
+		     	// Set up background first page
+		     	var bgImg = $("#tmNavLink1").data("bgImg");
+		     	
+		     	$.backstretch("img/" + bgImg, {fade: 500});
+
+		     	// Setup Carousel, Nav, and Nav Toggle
+			    setupCarousel();
+			    setupNav();
+			    setupNavToggle();
+			    setupFooter();
+
+			    // Resize Carousel upon window resize
+			    $(window).resize(function() {
+			    	setupCarousel();
+			    	setupFooter();
+			    });
+      		}	      	
+		});
+
+		</script>
+	</body>
+</html>

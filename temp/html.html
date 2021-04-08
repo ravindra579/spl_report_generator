@@ -1,0 +1,585 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Spl Report Generator</title>
+    <meta name="description" content="" />
+    <meta name="author" content="Tooplate" />
+    <link href="{% static 'css.css' %}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{% static 'fontawesome.css' %}" />
+    <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'venn.js' %}" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!--<link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet" />--->
+    <link rel="stylesheet" href="{% static 'tooplate-style.css' %}" />
+    <script src="https://cdn.anychart.com/releases/8.9.0/js/anychart-core.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.9.0/js/anychart-venn.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.9.0/themes/pastel.min.js"></script>
+<!--<link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">>
+<link rel="preload" href="https://prod-cdn.wetransfer.net/packs/media/actiefgrotesque/ActiefGrotesque_W_Regular-1f437876.woff" as="font1" type="font/woff" crossorigin="anonymous">  
+  <link rel="preload" href="https://prod-cdn.wetransfer.net/packs/media/actiefgrotesque/ActiefGrotesque_W_Medium-293e86f0.woff" as="font1" type="font/woff" crossorigin="anonymous">
+  <link rel="preload" href="https://prod-cdn.wetransfer.net/packs/media/gt-super-wt/GT-Super-WT-Super-1b214df1.woff" as="font2" type="font/woff" crossorigin="anonymous">-->
+  </head>
+<script>
+  var confi={
+    type: 'bar',
+    data:  {
+      labels: [" "," " ," "],
+      datasets: [{
+          label: ['your marks','avg marks','highest marks'],
+          backgroundColor: ['#ff0000', '#0000ff', '#ff0080'],
+          borderColor: "rgb(54, 162, 235)",
+          borderWidth: 1,
+          data: [{{apti.total}},{{avg.total}},{{hig.total}},0],
+        }]
+    },
+    options:{
+      responsive: true,
+        legend:{
+          display:false
+        }
+        }
+    
+  };
+var config={
+  type: 'doughnut',
+  data:  {
+    labels: ["verbal ability","logical ability","quantitative ability"],
+    datasets: [{
+        label: ["verbal ability","logical ability","quantitative ability"],
+        backgroundColor: ['#ff0000', '#0000ff', '#ff0080'],
+        borderColor: "rgb(54, 162, 235)",
+        borderWidth: 1,
+        data: [{{x}},{{z}},{{y}}],
+      }]
+  },options:{
+    responsive: true,
+      legend:{
+        display:false
+      }
+      }
+};
+var config11={
+	type: 'doughnut',
+	data:  {
+	  labels: ["Situation analysis","body language","team spirit","Articulation","overall participation"],
+	  datasets: [{
+	      label: ["Situation analysis","body language","team spirit","Articulation","overall participation"],
+	      backgroundColor: ['#ff0000', '#0000ff', '#ff0080','yellow'],
+	      borderColor: "rgb(54, 162, 235)",
+	      borderWidth: 1,
+	      data: [{{gd.analysis}},{{gd.body_l}},{{gd.team_s}},{{gd.articulation}},{{gd.participation}}],
+	    }]
+	},options:{
+	  responsive: true,
+	    legend:{
+	      display:true,
+	      position:"right"
+	    }
+	    }
+};
+   var config1 = {
+     type: 'radar',
+     data: {
+       datasets: [{
+        data: [{{gd.analysis}},{{gd.body_l}},{{gd.team_s}},{{gd.articulation}},
+{{gd.participation}}],
+         fillColor:["rgba(51,49,90,0.5)"],
+         strokeColor:["rgba(255,255,255,1)"],
+         pointColor:["rgba(255,255,255,1)"],
+         pointStrokeColor:['rgba(255,255,255,1)'],
+         backgroundColor: [
+            '#ff0080'
+         ],
+         borderColor:[
+         '#0000ff'],
+          hoverBorderColor:[
+          '#ff0000'
+          ],
+          poitBackgroundColor:[
+          '#ff0000'
+          ],
+          pointBorderColor:[
+          '#ff0000'
+          ],
+         label: 'marks'
+       }],
+       labels: ["Situation analysis","body language","team spirit","Articulation",
+       "overall participation"],
+     },
+     options:{
+       responsive: true,
+         legend:{
+           display:false
+         },
+         animate:{
+           animateScale :true,
+           animateRotate: true
+         }
+     }
+   };
+  var my =  {
+    type: 'horizontalBar',
+    data:  {
+      labels: ["Extroversion/Introversion", "Sensing/Intuition", "Thinking/Feeling", "Judging/Perceiving"],
+      datasets: [{
+          label: "E, S, T, J",
+          backgroundColor: "rgba(54, 162, 235, 0.2)",
+          borderColor: "rgb(54, 162, 235)",
+          borderWidth: 2,
+          data: [{{pyts.e_score}},{{pyts.n_score}},{{pyts.f_score}},{{pyts.j_score}},0],
+        }, {
+          label: "I, N, F, P",
+          backgroundColor: "rgba(255,99,132,0.2)",
+          borderColor: "rgba(255,99,132,1)",
+          borderWidth: 2,
+          data: [-(100-{{pyts.e_score}}),-(100-{{pyts.n_score}}),-(100-{{pyts.f_score}}),-(100-{{pyts.j_score}}),0],
+        }]
+    }
+  };
+  
+  anychart.onDocumentReady(function () {
+    var data = [
+      {
+        x: "A",
+        value: {{mod}},
+        name: " "
+      },
+      {
+        x: "C",
+        value: {{apti.total}},
+        name: " "
+      },
+      {
+        x: ["A", "C"],
+        value: {{n}},
+        name: " "
+      }
+    ];
+    var chart = anychart.venn(data);
+    chart.container("con");
+    chart
+      .title()
+      .enabled(true)
+      .fontSize(24)
+      .padding({ bottom: 25 })
+      .text(" ");
+    chart.stroke("1 #fff");
+    chart
+      .labels()
+      .fontSize(14)
+      .fontColor("#5e6469")
+      .hAlign("center")
+      .vAlign("center")
+      .fontWeight("500")
+      .format("{%Name}");
+    chart
+      .intersections()
+      .labels()
+      .fontStyle("italic")
+      .fontColor("gray")
+      .format("{%Name}");
+    chart.legend(false);
+    chart.draw();
+    //chart.title("venn diagram");
+    chart.labels().format("{%Name}");
+  });
+function dat(){
+var d={{apti.timespent}};
+if(d >=20 && d<=40){
+var da=[0,{{apti.total}},0,0,0,0,0];
+} else if(d>=40 && d<=60){
+var da=[0,0,{{apti.total}},0,0,0,0];
+} else if(d>=60 && d<=80){
+var da=[0,0,0,{{apti.total}},0,0,0];
+} else if(d>=80 && d <=100){
+var da=[0,0,0,0,{{apti.total}},0,0];
+} else if(d>=100){
+var da=[0,0,0,0,0,{{apti.total}},0];
+} else{
+var da=[0,{{apti.total}},0,0,0,0,0];
+}
+return da;
+}
+  var line_={
+    type: 'line',
+    data:  {
+      labels: ["0","20","40","60","80","100","120"],
+      datasets: [{
+      label:"",
+      data:[0,0,0,0,0,0,0,0],
+      backgroundColor: 'white',
+      type:'bubble'
+    },
+      {
+        label:"your marks",
+        data:dat(),
+        backgroundColor: 'black',
+        borderWidth:'20px',
+        type:'bubble'
+      },
+      {
+        type:'line',
+          label: "Work hard ahead" ,
+          backgroundColor: 'orange',
+          lineTension:0,
+          data: [20,20,20,20,20,65,65]
+        },
+        {type:'line',
+          label: "Need attension" ,
+          backgroundColor: '#ff0000',
+          lineTension:0,
+          data: [30,30,30,30,65,65,65]
+        },
+        {type:'line',
+          label: "satisfactory" ,
+          backgroundColor: 'yellow',
+          data: [40,40,40,40,40,40],
+          lineTension:0
+        },
+        {
+          label: "Good" ,
+          backgroundColor: 'blue',
+          data: [50,50,50,50,50,50],
+          lineTension:0
+        },
+        {
+          label: "Brilliant" ,
+          backgroundColor: 'gray',
+          data: [65,65,65,65,65,65,65],
+          lineTension:0
+        }]
+    },
+    options:{
+      responsive:true,
+      legend:{
+        display:false
+      },
+      hover:{
+        mode:'label'
+      },
+      scales:{
+            xAxes:[{
+              display:true,
+              scaleLabel:{
+                display:false,
+                labelString:' '
+              }
+            }],
+            yAxes:[{
+              display:true,
+              ticks:{
+                beginAtZero:true,
+                max:65
+              }
+            }]
+      }
+
+    }
+  };
+   window.onload = function() {
+    var ctx_line = document.getElementById('line').getContext('2d');
+    window.myPie = new Chart(ctx_line, line_);
+     var ctx = document.getElementById('pie').getContext('2d');
+     window.myPie = new Chart(ctx, config);
+     var ctx1 = document.getElementById('pie1').getContext('2d');
+     window.myPie = new Chart(ctx1, config1);
+     var ct = document.getElementById('pi').getContext('2d');
+     window.myPie = new Chart(ct, my);
+     var ctt = document.getElementById('piy').getContext('2d');
+     window.myPie = new Chart(ctt, confi);
+   };
+   window.onclick=function(){
+     var x=document.getElementById(exp)
+   }
+</script>
+  <body>
+    <div id="page-wraper">
+      <div class="responsive-nav">
+        <i class="fa fa-bars" id="menu-toggle"></i>
+        <div id="menu" class="menu">
+          <i class="fa fa-times" id="menu-close"></i>
+          <div class="container">
+            <div class="image">
+              <a href="#"><img src="https://tse1.mm.bing.net/th?id=OIP.76Fw9ILdyKkJDPqOw6sMWAAAAA&pid=Api&P=0&w=225&h=141" alt="The Skill Craft" /></a>
+            </div>
+            <div class="author-content">
+              <h4 style="color: white;">The Skill Craft</h4>
+              <span>Student Placement League</span>
+            </div>
+            <nav class="main-nav" role="navigation">
+              <ul class="main-menu">
+                <li></li>
+                <li><a href="#section1">About</a></li>
+                <li><a href="#section2">Student info</a></li>
+                <li><a href="#section3">Aptitude test</a></li>
+                <li><a href="#section4">Pyschometric test</a></li>
+                <li><a href="#section5">Group discussion</a></li>
+                <li><a href="#section6">Resume building</a></li>
+                <li><a href="#section7">Essay</a></li>
+                <li><a href="#section8">personal interview</a></li>
+                <li><a href="#section9">final scores</a></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+  </div>
+      <section class="section" data-section="section1">
+        <div class="container">
+          <div class="section-heading">
+            <h1 style="text-align: center;"><b>SPL Report</b></h1>
+            <h2>The Skill Craft</h2>
+            <div class="line-dec"></div>
+            <span>&nbsp &nbsp &nbsp &nbspBrake fluid is incompressible under pressure, and since it has a high boiling point, the heat from your brakes isn't enough to cause it to boil. But water has a much lower boiling point. If the moisture-contaminated brake fluid starts boiling, it creates gas bubbles. Gas is compressible. So when you apply brake the hydraulic pressure in the brake system, instead of that force being transferred to your brake pads in order to grip your rotors (or drums) and slow your car down, that force is wasted in compressing the gas.</span>
+          </div>
+        </div>
+      </section>
+      <section class="section" data-section="section2">
+        <div class="container">
+          <div class="section-heading">
+            <h2>Student info</h2>
+            <div class="line-dec"></div>
+            <span>
+              <p>NAME:-{{user.name}}</p>
+         <p>EMAIL:-{{user.email}}</p>
+         <p>YEAR OF STUDY:-SECOND YEAR</p>
+         <p>DEPARTMENT:-{{user.dept}}</p></span>
+          </div>
+        </div>
+      </section>
+      <section class="section my-services" data-section="section3">
+        <div style="width: 50%;height:300px;float :right">
+            <div class="aa" style="width: 50%;float :left">
+              <canvas id="pie"></canvas>
+            </div>
+            <div class="aa" style="width: 50%;float :right">
+              <canvas id="piy"></canvas>
+            </div>
+            <br>
+              <div style="width:50%;padding-top:30px;float:left">
+                <canvas id="line" ></canvas>
+              </div>
+              <div id="con" style="width:50%;height:50%;padding-down:20px;float:right"></div>
+          </div>
+            <h2>Aptitude test</h2>
+            <div class="line-dec"></div>
+            <br> 
+            <h3 class="e" style="text-align: center;">SCORE</h3>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table">
+                    <div class="progress">
+                      <div class="progress-bar" style="width: {{apti.total}}%" aria-valuenow="10" aria-valuemin="0" ,aria-valuemax="100">{{apti.total}}%</div>
+                    </div>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <br>
+            <br>
+      <p>Didn't understood the graphs <a href="graphs">click here</a> to know more about your aptitude test</p>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <div class="row">
+              <div class="service-item">
+                <h4>Feedback</h4>
+                <p>{{apti.timespent}} </p>
+                <p>{{avg.total}} </p>
+                <p>{{hig.total}} </p>
+                <p>{{x}} </p>
+                <p>{{y}} </p>
+                <p>{{z}} </p>
+                <p>{{n}} </p>
+              </div>
+            </div>
+            </section> 
+            
+            <div class="aaaa" style="width: 40%;float :right">
+              <canvas id="pi" ></canvas>
+            </div>     
+      <section class="section my-services" data-section="section4">
+        <div class="container">
+          <div class="section-heading">
+            <h2>Pyschometric test</h2>
+            <div class="line-dec"></div>
+            <br>
+            <h5><b>Personality type:- {{pyts.personality}}</b></h5>
+          </div>
+          <br>
+          <div class="row">
+              <div class="service-item">
+                <h4>Feedback</h4>
+                <p>{{feedp}}</p>
+              </div>
+          </div>
+          </div>
+      </section>
+      <section class="section my-services" data-section="section5">
+	<div style="width:50%;padding-top:40px;float:right">
+		<canvas id="pie1"></canvas>
+	     </div>
+        <div class="container">
+          <div class="section-heading">
+            <h2>Group discussion</h2>
+            <div class="line-dec"></div>
+            <h3 class="e" style="text-align: center;">SCORE</h3>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table">
+                    <div class="progress">
+                      <div class="progress-bar" style="width: {{gdt}}%" 
+aria-valuenow="10" aria-valuemin="0" ,aria-valuemax="4">
+{{gdt}}%</div>
+                    </div>
+                  </table>
+                </div>
+              </div>
+            </div>           
+            
+              </div>
+            <br>
+          </div>
+          <div class="row">
+              <div class="service-item">
+                <h4>Feedback</h4>
+                <p>{{gd.feedback}}</p>
+          </div>
+        </div>
+      </section>
+      <section class="section my-services" data-section="section6">
+        <div class="container">
+          <div class="section-heading">
+            <h2>Resume building</h2>
+            <div class="line-dec"></div>
+            <br>
+          </div>
+          <div class="row">
+              <div class="service-item">
+                <h4>Feedback</h4>
+                <p>{{resum.feedback}}</p>
+          </div>
+        </div>
+      </section>
+      <section class="section my-services" data-section="section7">
+          <div class="section-heading">
+            <h2>Essay</h2>
+            <div class="line-dec"></div>
+            <br>
+          </div>
+          <div class="row">
+              <div class="service-item">
+                <h4>Feedback</h4>
+                <p>{{essa.feedback}}</p>
+          </div>
+        </div>
+      </section>
+      <section class="section my-services" data-section="section8">
+        <div class="container">
+          <div class="section-heading">
+            <h2>personal interview</h2>
+            <div class="line-dec"></div>
+            <div class="e">
+              <p >PARAM 1:-{{pii.param1}}</p>
+              <p >PARAM 2:-{{pii.param2}}</p>
+              <p >PARAM 3:-{{pii.param3}}</p>
+              <p >PARAM 4:-{{pii.param4}}</p>
+              <p >PARAM 5:-{{pii.param5}}</p>
+              <p >PARAM 6:-{{pii.param6}}</p>
+              <p >PARAM 7:-{{pii.param7}}</p>
+              <p >PARAM 8:-{{pii.param8}}</p>
+              </div>
+            <br>
+          </div>
+          <div class="row">
+              <div class="service-item">
+                <h4>Feedback</h4>
+                <p>{{pii.feedback}}</p>
+          </div>
+        </div>
+      </section>
+      <section class="section" data-section="section9">
+          <div>
+            <h3 class="f" >SIGNATURE</h3>
+           <p class="f">-----------</p>
+           <h3 class="f">CEO, TSC</p>
+            </h3>
+           <br>
+           <br>
+           <div id="con" style="width:500px;height:500px;float:center"></div>
+           <br>
+           <br>
+           <br>
+           <br>
+           <br>
+           <br>
+           <br>
+           <br>
+           <br>
+           <br>
+        </div>
+        </section>
+    <script src="{% static 'jquery.min.js' %}"></script>
+    <script>
+    
+      $(".main-menu li:first").addClass("active");
+
+      var showSection = function showSection(section, isAnimate) {
+        var direction = section.replace(/#/, ""),
+          reqSection = $(".section").filter(
+            '[data-section="' + direction + '"]'
+          ),
+          reqSectionPos = reqSection.offset().top - 0;
+
+        if (isAnimate) {
+          $("body, html").animate(
+            {
+              scrollTop: reqSectionPos
+            },
+            800
+          );
+        } else {
+          $("body, html").scrollTop(reqSectionPos);
+        }
+      };
+
+      var checkSection = function checkSection() {
+        $(".section").each(function() {
+          var $this = $(this),
+            topEdge = $this.offset().top - 80,
+            bottomEdge = topEdge + $this.height(),
+            wScroll = $(window).scrollTop();
+          if (topEdge < wScroll && bottomEdge > wScroll) {
+            var currentId = $this.data("section"),
+              reqLink = $("a").filter("[http://127.0.0.1:8000/#" + currentId + "]");
+            reqLink
+              .closest("li")
+              .addClass("active")
+              .siblings()
+              .removeClass("active");
+          }
+        });
+      };
+
+      $(".main-menu").on("click", "a", function(e) {
+        e.preventDefault();
+        showSection($(this).attr("href"), true);
+      });
+
+      $(window).scroll(function() {
+        checkSection();
+      });
+    </script>
+  </body>
+</html>
